@@ -9,12 +9,17 @@
     const items: TabsProps['items'] = [
       {
         key: '1',
-        label: 'Проверка наложением макетов',
+        label: 'Сверка наложением',
         children: <TransparencyComparer/>,
       },
       {
         key: '2',
-        label: 'Проверка наложением макетов',
+        label: 'Попиксельная cверка',
+        children: 'Under construction',
+      },
+      {
+        key: '3',
+        label: 'Текстовая cверка',
         children: 'Under construction',
       },
     ];
@@ -51,7 +56,7 @@
 
       return (
         <Flex gap={20} vertical className='main'>
-          <h1>Проверка макетов</h1>
+          <h1>Сверка макетов</h1>
           <Flex className='main-tabs' flex={1}>
           <Tabs defaultActiveKey="1" items={items} />
 
