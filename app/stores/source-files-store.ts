@@ -26,7 +26,7 @@ export type SourceFilesStore = SourceFilesState & SourceFilesActions
 export const defaultInitState: SourceFilesState = {
   srcFile: undefined,
   srcFileObj: undefined,
-  maketFile: null,
+  maketFile: undefined,
   maketFileObj: undefined,
   srcImageOpacity: 0.5,
   pos: { x: 0, y: 0, scale: 1 },

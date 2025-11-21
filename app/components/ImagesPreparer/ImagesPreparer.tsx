@@ -77,7 +77,7 @@ export const ImagesPreparer = () => {
   return (
     <Flex vertical gap={10}>
         <Flex gap={10} style={{width: "100%"}}>          
-            <Flex gap={10} style={{width: "100%", alignItems: "center"}}>
+            <Flex gap={10} style={{alignItems: "center", minWidth: "380px"}}>
               <Upload
                 accept=".png,.jpg,.pdf"
                 maxCount={1}
@@ -105,9 +105,11 @@ export const ImagesPreparer = () => {
               >
                   <Button>Исходник</Button>
               </Upload>
-              <Checkbox style={{width: "200px"}} disabled={srcFile === undefined} defaultChecked={true} onChange={e => setSrcFile(e.target.checked ? URL.createObjectURL(srcFileObj?.originFileObj as File) : null)}>Отображать исходник</Checkbox>
+              <Flex gap={10} style={{alignItems: "center", position: "absolute", left: "110px", top: "6px"}}>
+                <Checkbox style={{width: "200px"}} disabled={srcFile === undefined} defaultChecked={true} onChange={e => setSrcFile(e.target.checked ? URL.createObjectURL(srcFileObj?.originFileObj as File) : null)}>Отображать исходник</Checkbox>
+              </Flex>
             </Flex>
-            <Flex gap={10} style={{width: "100%", alignItems: "center"}} >    
+            <Flex gap={10} style={{width: "100%"}} >    
             <Upload
               accept="image/*"
               maxCount={1}
@@ -127,10 +129,12 @@ export const ImagesPreparer = () => {
             >
                 <Button disabled={!srcFile}>Макет из типографии</Button>
             </Upload>            
+            <Flex gap={10} style={{alignItems: "center", position: "absolute", left: "512px", top: "6px"}}>
              <Checkbox style={{width: "200px"}} disabled={maketFile === undefined} defaultChecked={true} onChange={e => setMaketFile(e.target.checked ? URL.createObjectURL(maketFileObj?.originFileObj as File) : null)}>Отображать макет</Checkbox>          
+             </Flex>
             </Flex>
       </Flex>
-        <Flex gap={10} style={{width: "100%", height: "55px", alignItems: "center"}}>          
+        <Flex gap={10} style={{height: "55px"}}>          
               <Flex gap={10} style={{minWidth: "fit-content", alignItems: "center"}}>
                 <Button onClick={onReverse} title="Поменять местами" icon={<i className="fa-solid fa-arrows-up-down-left-right"></i>} />
               </Flex>    
