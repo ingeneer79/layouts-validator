@@ -15,6 +15,9 @@ import * as sourceFilesStoreProvider from '@providers/source-files-store-provide
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en">
+            <head>
+                <script src="/pdfjs/pdf.mjs" type="module" />
+            </head>
             <body>
                 <sourceFilesStoreProvider.SourceFilesStoreProvider>
                     <AntdRegistry>{children}</AntdRegistry>
