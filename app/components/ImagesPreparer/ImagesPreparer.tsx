@@ -3,16 +3,21 @@
 import { Button, Checkbox, Flex, FloatButton, Image, Slider, UploadFile } from "antd";
 import Upload from "antd/es/upload/Upload";
 import { useState } from "react";
-import "./TransparencyComparer.css";
+import "./ImagesPreparer.css";
 import { usePanAndZoom } from "./hooks/usePanAndZoom";
+import { useSourceFilesStore } from "@/app/providers/source-files-store-provider";
 
-export const TransparencyComparer = () => {
-  const [srcFile, setSrcFile] = useState<string | undefined | null>();
-  const [srcFileObj, setSrcFileObj] = useState<UploadFile | undefined>();
-  const [maketFile, setMaketFile] = useState<string | null | undefined>();
-  const [maketFileObj, setMaketFileObj] = useState<UploadFile | undefined>();
-  const [srcImageOpacity, setSrcImageOpacity] = useState(0.5);
-  const [pos, setPos] = useState({ x: 0, y: 0, scale: 1 });
+export const ImagesPreparer = () => {
+
+  const { srcFile, srcFileObj, maketFile, maketFileObj, srcImageOpacity, setSrcFile, setSrcFileObj, setMaketFile, setMaketFileObj, setPos, setSrcImageOpacity } = useSourceFilesStore(
+    (state) => state,
+  )  
+  // const [srcFile, setSrcFile] = useState<string | undefined | null>();
+  // const [srcFileObj, setSrcFileObj] = useState<UploadFile | undefined>();
+  // const [maketFile, setMaketFile] = useState<string | null | undefined>();
+  // const [maketFileObj, setMaketFileObj] = useState<UploadFile | undefined>();
+  // const [srcImageOpacity, setSrcImageOpacity] = useState(0.5);
+  // const [pos, setPos] = useState({ x: 0, y: 0, scale: 1 });
 
   const { isMoving, containerRef, onMouseDown, onWheel, translateX, translateY, scale } = usePanAndZoom();
 
@@ -38,6 +43,7 @@ export const TransparencyComparer = () => {
                 }
                 if (info.file.status === "done") {
                     setSrcFile(URL.createObjectURL(info.file.originFileObj as File));
+                    debugger
                     setSrcFileObj(info.file);
                     setPos({ x: 0, y: 0, scale: 1 });
                 }

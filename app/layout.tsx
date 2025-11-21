@@ -10,12 +10,15 @@ export const metadata: Metadata = {
 
 import React from 'react';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
+import * as sourceFilesStoreProvider from '@providers/source-files-store-provider';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="en">
             <body>
-                <AntdRegistry>{children}</AntdRegistry>
+                <sourceFilesStoreProvider.SourceFilesStoreProvider>
+                    <AntdRegistry>{children}</AntdRegistry>
+                </sourceFilesStoreProvider.SourceFilesStoreProvider>
             </body>
         </html>
     );

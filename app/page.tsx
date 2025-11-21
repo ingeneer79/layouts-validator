@@ -3,10 +3,16 @@
     import { Flex, Tabs } from 'antd';
     import type { TabsProps } from 'antd';
     import { TransparencyComparer } from './components/TransparencyComparer/TransparencyComparer';
+import { ImagesPreparer } from './components/ImagesPreparer/ImagesPreparer';
 
     export default function HomePage() {
 
     const items: TabsProps['items'] = [
+      {
+        key: '0',
+        label: 'Подготовка изображений',
+        children: <ImagesPreparer/>,
+      },
       {
         key: '1',
         label: 'Сверка наложением',
@@ -58,7 +64,7 @@
         <Flex gap={20} vertical className='main'>
           <h1>Сверка макетов</h1>
           <Flex className='main-tabs' flex={1}>
-          <Tabs defaultActiveKey="1" items={items} />
+          <Tabs defaultActiveKey="0" items={items} />
 
           {/* <button onClick={handleCompare} disabled={loading}>
             {loading ? 'Comparing...' : 'Compare Images'}
