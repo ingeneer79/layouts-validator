@@ -24,3 +24,7 @@
         flex: 1
     }
 }
+
+.ant-upload-list-item {
+    max-width: 400px;
+}
