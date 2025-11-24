@@ -28,6 +28,11 @@ import { ImagesPreparer } from './components/ImagesPreparer/ImagesPreparer';
         label: 'Текстовая cверка',
         children: 'Under construction',
       },
+      {
+        key: '4',
+        label: 'Cверка штрихкодов',
+        children: 'Under construction',
+      },
     ];
 
       // const [result, setResult] = useState<{

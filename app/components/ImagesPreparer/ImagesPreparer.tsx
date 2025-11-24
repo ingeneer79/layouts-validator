@@ -5,29 +5,29 @@ import Upload from "antd/es/upload/Upload";
 import "./ImagesPreparer.css";
 import { usePanAndZoom } from "./hooks/usePanAndZoom";
 import { useSourceFilesStore } from "@/app/providers/source-files-store-provider";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { InteractionOutlined, RotateLeftOutlined } from "@ant-design/icons";
 import { RotateRightOutlined } from "@ant-design/icons";
 
 export const ImagesPreparer = () => {
   // Импорт PDF.js
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let pdfjsLib: any = null;
+  const [pdfjsLib, setPdfjsLib] = useState<any>(null);
 
   const {
     srcFile,
     srcFileObj,
     maketFile,
     maketFileObj,
-    srcImageOpacity,
-    srcImageRotateAngle,
+    maketImageOpacity,
+    maketImageRotateAngle,
     setSrcFile,
     setSrcFileObj,
     setMaketFile,
     setMaketFileObj,
     setPos,
-    setSrcImageOpacity,
-    setSrcImageRotateAngle,
+    setMaketImageOpacity,
+    setMaketImageRotateAngle,
   } = useSourceFilesStore(state => state);
 
   const {
@@ -47,13 +47,13 @@ export const ImagesPreparer = () => {
     setMaketFileObj(srcFileObj);
   };
 
-  const onRotateSrcImage = (angle: number) => {
+  const onRotateMaketImage = (angle: number) => {
     if (srcFileObj) {
-      let newAngle = srcImageRotateAngle + angle;
+      let newAngle = maketImageRotateAngle + angle;
       if (newAngle % 360 === 0) {
         newAngle = 0;
       } 
-      setSrcImageRotateAngle(newAngle);
+      setMaketImageRotateAngle(newAngle);
     }
   };
 
@@ -61,7 +61,7 @@ export const ImagesPreparer = () => {
     const result = new Promise<string>((resolve) => {
       const reader = new FileReader();
       reader.onload = async function (event) {
-        if (!event.target) {
+        if (!event.target || !pdfjsLib) {
           resolve("");
           return;
         }
@@ -99,7 +99,7 @@ export const ImagesPreparer = () => {
   useEffect(() => {
     const pdfjs = (window as any)
       .pdfjsLib as typeof import("pdfjs-dist/types/src/pdf");
-    pdfjsLib = pdfjs;
+    setPdfjsLib(pdfjs);
     pdfjs.GlobalWorkerOptions.workerSrc = `/pdfjs/pdf.worker.min.mjs`;
   }, []);
 
@@ -136,7 +136,7 @@ export const ImagesPreparer = () => {
               }
             }}
           >
-            <Button>Исходник</Button>
+            <Button disabled={!pdfjsLib}>Исходник</Button>
           </Upload>
           <Flex
             gap={10}
@@ -163,7 +163,7 @@ export const ImagesPreparer = () => {
             </Checkbox>
           </Flex>
         </Flex>
-        <Flex gap={10} style={{ width: "100%" }}>
+        <Flex gap={10} style={{ width: "100%", marginLeft: "10px", alignItems: "top" }}>
           <Upload
             accept="image/*"
             maxCount={1}
@@ -217,16 +217,19 @@ export const ImagesPreparer = () => {
           style={{ minWidth: "fit-content", alignItems: "center" }}
         >
           <Button
-            onClick={() => onRotateSrcImage(-90)}
+            disabled={!maketFile || isMoving}
+            onClick={() => onRotateMaketImage(-90)}
             title="Повернуть против часовой стрелки на 90 градусов"
             icon={<RotateLeftOutlined />}
           />
           <Button
-            onClick={() => onRotateSrcImage(90)}
+            disabled={!maketFile || isMoving}
+            onClick={() => onRotateMaketImage(90)}
             title="Повернуть по часовой стрелки"
             icon={<RotateRightOutlined />}
           />
           <Button
+            disabled={!srcFile || !maketFile || isMoving}
             onClick={onReverse}
             title="Поменять местами"
             icon={<InteractionOutlined />}
@@ -245,7 +248,7 @@ export const ImagesPreparer = () => {
               if (isMoving) {
                 return;
               }
-              setSrcImageOpacity(value / 100);
+              setMaketImageOpacity(value / 100);
             }}
             style={{ width: "100%" }}
           />
@@ -256,7 +259,7 @@ export const ImagesPreparer = () => {
           {srcFile && (
             <div
               className="compare-image-wrapper"
-              style={{ transform: `translate(0px, 0px) scale(${scale}) rotate(${srcImageRotateAngle}deg)` }}
+              style={{ transform: `translate(0px, 0px) scale(${scale})` }}
             >
               <Image
                 className="compare-image"
@@ -276,8 +279,8 @@ export const ImagesPreparer = () => {
               style={{
                 top: `${srcFile ? "-500px" : "0px"}`,
                 position: "relative",
-                opacity: srcImageOpacity,
-                transform: `translate(${translateX}px, ${translateY}px) scale(${scale})`,
+                opacity: maketImageOpacity,
+                transform: `translate(${translateX}px, ${translateY}px) scale(${scale}) rotate(${maketImageRotateAngle}deg)`,
               }}
             >
               <Image

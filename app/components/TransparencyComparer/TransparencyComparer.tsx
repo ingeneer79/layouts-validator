@@ -12,7 +12,6 @@ export const TransparencyComparer = () => {
   const [maketFile, setMaketFile] = useState<string | null | undefined>();
   const [maketFileObj, setMaketFileObj] = useState<UploadFile | undefined>();
   const [srcImageOpacity, setSrcImageOpacity] = useState(0.5);
-  const [pos, setPos] = useState({ x: 0, y: 0, scale: 1 });
 
   const { isMoving, containerRef, onMouseDown, onWheel, translateX, translateY, scale } = usePanAndZoom();
 
@@ -24,47 +23,7 @@ export const TransparencyComparer = () => {
   };
 
   return (
-    <Flex vertical gap={10}>
-        <Flex gap={10} style={{width: "100%"}}>          
-            <Upload
-              accept="image/*"
-              maxCount={1}
-                multiple={false}
-                onChange={info => {
-                if (info.file.status === "removed") {
-                    setSrcFile(undefined);
-                    setSrcFileObj(undefined);
-                  return;
-                }
-                if (info.file.status === "done") {
-                    setSrcFile(URL.createObjectURL(info.file.originFileObj as File));
-                    setSrcFileObj(info.file);
-                    setPos({ x: 0, y: 0, scale: 1 });
-                }
-              }}
-            >
-                <Button>Исходник</Button>
-            </Upload>
-            <Upload
-              accept="image/*"
-              maxCount={1}
-              multiple={false}
-              onChange={info => {
-                if (info.file.status === "removed") {
-                    setMaketFile(undefined);
-                    setMaketFileObj(undefined);
-                  return;
-                }
-                if (info.file.status === "done") {
-                    setMaketFile(URL.createObjectURL(info.file.originFileObj as File));
-                    setMaketFileObj(info.file);
-                    setPos({ x: 0, y: 0, scale: 1 });
-                }
-              }}
-            >
-                <Button disabled={!srcFile}>Макет из типографии</Button>
-            </Upload>            
-      </Flex>
+    <Flex vertical gap={10}>        
         <Flex gap={10} style={{width: "100%", height: "55px", alignItems: "center"}}>          
               <Flex gap={10} style={{minWidth: "fit-content", alignItems: "center"}}>
                 <Checkbox disabled={srcFile === undefined} defaultChecked={true} onChange={e => setSrcFile(e.target.checked ? URL.createObjectURL(srcFileObj?.originFileObj as File) : null)}>Отображать исходник</Checkbox>
