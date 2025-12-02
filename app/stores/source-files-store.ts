@@ -9,6 +9,7 @@ export type SourceFilesState = {
   maketFileObj: UploadFile | undefined;
   maketImageOpacity: number;
   maketImageRotateAngle: number;
+  maketImageZoom: number;
   pos: { x: number; y: number; scale: number };
 }
 
@@ -18,6 +19,7 @@ export type SourceFilesActions = {
   setMaketFile: (file: string | null | undefined) => void;
   setMaketFileObj: (file: UploadFile | undefined) => void;
   setMaketImageOpacity: (opacity: number) => void;
+  setMaketImageZoom: (opacity: number) => void;
   setMaketImageRotateAngle: (angle: number) => void;
   setPos: (pos: { x: number; y: number; scale: number }) => void;
 }
@@ -32,6 +34,7 @@ export const defaultInitState: SourceFilesState = {
   maketFileObj: undefined,
   maketImageOpacity: 0.5,
   maketImageRotateAngle: 0,
+  maketImageZoom: 100,
   pos: { x: 0, y: 0, scale: 1 },
 }
 
@@ -50,6 +53,7 @@ export const createSourceFilesStore = (
     setMaketFileObj: (file) => set({ maketFileObj: file }),
     setMaketImageOpacity: (opacity) => set({ maketImageOpacity: opacity }),
     setMaketImageRotateAngle: (angle) => set({ maketImageRotateAngle: angle }),
+    setMaketImageZoom: (zoom) => set({ maketImageZoom: zoom }),
     setPos: (pos) => set({ pos }),
   }))
 }

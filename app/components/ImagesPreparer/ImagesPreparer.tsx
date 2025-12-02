@@ -8,6 +8,7 @@ import { useSourceFilesStore } from "@/app/providers/source-files-store-provider
 import { useEffect, useState } from "react";
 import { InteractionOutlined, RotateLeftOutlined } from "@ant-design/icons";
 import { RotateRightOutlined } from "@ant-design/icons";
+import Input from "antd/es/input/Input";
 
 export const ImagesPreparer = () => {
   // Импорт PDF.js
@@ -21,6 +22,7 @@ export const ImagesPreparer = () => {
     maketFileObj,
     maketImageOpacity,
     maketImageRotateAngle,
+    maketImageZoom,
     setSrcFile,
     setSrcFileObj,
     setMaketFile,
@@ -28,6 +30,7 @@ export const ImagesPreparer = () => {
     setPos,
     setMaketImageOpacity,
     setMaketImageRotateAngle,
+    setMaketImageZoom,
   } = useSourceFilesStore(state => state);
 
   const {
@@ -104,7 +107,7 @@ export const ImagesPreparer = () => {
   }, []);
 
   return (
-    <Flex vertical gap={10}>
+    <Flex className="image-preparer" vertical gap={10}>
       <Flex gap={10} style={{ width: "100%" }}>
         <Flex gap={10} style={{ alignItems: "center", minWidth: "380px" }}>
           <Upload
@@ -124,6 +127,7 @@ export const ImagesPreparer = () => {
                       setSrcFile(imageDataUrl);
                       setSrcFileObj(info.file);
                       setPos({ x: 0, y: 0, scale: 1 });
+                      setMaketImageRotateAngle(0);
                     }
                   );
                 } else {
@@ -133,6 +137,7 @@ export const ImagesPreparer = () => {
                   setSrcFileObj(info.file);
                 }
                 setPos({ x: 0, y: 0, scale: 1 });
+                setMaketImageRotateAngle(0);
               }
             }}
           >
@@ -228,6 +233,11 @@ export const ImagesPreparer = () => {
             title="Повернуть по часовой стрелки"
             icon={<RotateRightOutlined />}
           />
+          <Flex gap={10} style={{alignItems: "center"}}>
+            <label className={!maketFile ? "disabled" : ""}>Масштаб</label>
+            <Input disabled={!maketFile} style={{ width: "100px" }} value={maketImageZoom} onChange={e => setMaketImageZoom(Number(e.target.value))}>
+          </Input>   
+          </Flex>
           <Button
             disabled={!srcFile || !maketFile || isMoving}
             onClick={onReverse}
@@ -239,7 +249,7 @@ export const ImagesPreparer = () => {
           gap={10}
           style={{ width: "100%", marginLeft: "10px", alignItems: "center" }}
         >
-          <label>Прозрачность</label>
+          <label className={!maketFile ? "disabled" : ""}>Прозрачность</label>
           <Slider
             disabled={!maketFile || !srcFile || isMoving}
             tooltip={{ formatter: value => `${value}%` }}
@@ -255,7 +265,7 @@ export const ImagesPreparer = () => {
         </Flex>
       </Flex>
       {srcFile || maketFile ? (
-        <div className="compare-images" ref={containerRef}>
+        <div className="compare-images comparer-background" ref={containerRef}>
           {srcFile && (
             <div
               className="compare-image-wrapper"
@@ -280,7 +290,7 @@ export const ImagesPreparer = () => {
                 top: `${srcFile ? "-500px" : "0px"}`,
                 position: "relative",
                 opacity: maketImageOpacity,
-                transform: `translate(${translateX}px, ${translateY}px) scale(${scale}) rotate(${maketImageRotateAngle}deg)`,
+                transform: `translate(${translateX}px, ${translateY}px) scale(${scale + maketImageZoom/100}) rotate(${maketImageRotateAngle}deg)`,
               }}
             >
               <Image
