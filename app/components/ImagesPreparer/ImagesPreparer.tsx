@@ -5,15 +5,18 @@ import Upload from "antd/es/upload/Upload";
 import "./ImagesPreparer.css";
 import { usePanAndZoom } from "./hooks/usePanAndZoom";
 import { useSourceFilesStore } from "@/app/providers/source-files-store-provider";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { InteractionOutlined, RotateLeftOutlined } from "@ant-design/icons";
 import { RotateRightOutlined } from "@ant-design/icons";
 import Input from "antd/es/input/Input";
+import { ImagesCanvas } from "../ImagesCanvas/ImagesCanvas";
 
 export const ImagesPreparer = () => {
   // Импорт PDF.js
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [pdfjsLib, setPdfjsLib] = useState<any>(null);
+  const [srcFileVisible, setSrcFileVisible] = useState(true);
+  const [maketFileVisible, setMaketFileVisible] = useState(true);
 
   const {
     srcFile,
@@ -31,17 +34,25 @@ export const ImagesPreparer = () => {
     setMaketImageOpacity,
     setMaketImageRotateAngle,
     setMaketImageZoom,
+    setMaketImageTranslateX,
+    setMaketImageTranslateY,
   } = useSourceFilesStore(state => state);
 
   const {
     isMoving,
-    containerRef,
     onMouseDown,
     onWheel,
     translateX,
-    translateY,    
+    translateY,
     scale,
+    containerRef,
   } = usePanAndZoom();
+
+  useEffect(() => {
+    setMaketImageTranslateX(translateX);
+    setMaketImageTranslateY(translateY);
+  }, [translateX, translateY, setMaketImageTranslateX, setMaketImageTranslateY]);
+
 
   const onReverse = () => {
     setSrcFile(maketFile);
@@ -124,8 +135,9 @@ export const ImagesPreparer = () => {
                 if (info.file.name.endsWith(".pdf")) {
                   readPDF(info.file.originFileObj as Blob).then(
                     imageDataUrl => {
+                      debugger
                       setSrcFile(imageDataUrl);
-                      setSrcFileObj(info.file);
+                      // setSrcFileObj(imageDataUrl);
                       setPos({ x: 0, y: 0, scale: 1 });
                       setMaketImageRotateAngle(0);
                     }
@@ -156,12 +168,8 @@ export const ImagesPreparer = () => {
               style={{ width: "200px" }}
               disabled={srcFile === undefined}
               defaultChecked={true}
-              onChange={e =>
-                setSrcFile(
-                  e.target.checked
-                    ? URL.createObjectURL(srcFileObj?.originFileObj as File)
-                    : null
-                )
+              onChange={e => 
+                setSrcFileVisible(e.target.checked)
               }
             >
               Отображать исходник
@@ -204,11 +212,7 @@ export const ImagesPreparer = () => {
               disabled={maketFile === undefined}
               defaultChecked={true}
               onChange={e =>
-                setMaketFile(
-                  e.target.checked
-                    ? URL.createObjectURL(maketFileObj?.originFileObj as File)
-                    : null
-                )
+                setMaketFileVisible(e.target.checked)
               }
             >
               Отображать макет
@@ -235,7 +239,7 @@ export const ImagesPreparer = () => {
           />
           <Flex gap={10} style={{alignItems: "center"}}>
             <label className={!maketFile ? "disabled" : ""}>Масштаб</label>
-            <Input disabled={!maketFile} style={{ width: "100px" }} value={maketImageZoom} onChange={e => setMaketImageZoom(Number(e.target.value))}>
+            <Input type="number" disabled={!maketFile} style={{ width: "70px" }} value={maketImageZoom} onChange={e => setMaketImageZoom(Number(e.target.value))}>
           </Input>   
           </Flex>
           <Button
@@ -265,45 +269,14 @@ export const ImagesPreparer = () => {
         </Flex>
       </Flex>
       {srcFile || maketFile ? (
-        <div className="compare-images comparer-background" ref={containerRef}>
-          {srcFile && (
-            <div
-              className="compare-image-wrapper"
-              style={{ transform: `translate(0px, 0px) scale(${scale})` }}
-            >
-              <Image
-                className="compare-image"
-                src={srcFile}
-                width="100%"
-                height="100%"
-                alt=""
-                preview={false}
-              />
-            </div>
-          )}
-          {maketFile && (
-            <div
-              className="compare-image-wrapper"
-              onMouseDown={onMouseDown}
-              onWheel={onWheel}
-              style={{
-                top: `${srcFile ? "-500px" : "0px"}`,
-                position: "relative",
-                opacity: maketImageOpacity,
-                transform: `translate(${translateX}px, ${translateY}px) scale(${scale + maketImageZoom/100}) rotate(${maketImageRotateAngle}deg)`,
-              }}
-            >
-              <Image
-                className="compare-image"
-                src={maketFile}
-                width="100%"
-                height="100%"
-                alt=""
-                preview={false}
-              />
-            </div>
-          )}
-        </div>
+        <ImagesCanvas
+          srcFileVisible={srcFileVisible}
+          maketFileVisible={maketFileVisible}
+          containerRef={containerRef}
+          onMouseDown={onMouseDown}
+          onWheel={onWheel}
+          scale={scale}
+        />
       ) : (
         <Flex className="no-images">
           <h3>Выберите макет</h3>

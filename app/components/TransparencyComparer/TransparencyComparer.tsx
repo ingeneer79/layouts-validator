@@ -5,56 +5,33 @@ import Upload from "antd/es/upload/Upload";
 import { useState } from "react";
 import "./TransparencyComparer.css";
 import { usePanAndZoom } from "./hooks/usePanAndZoom";
+import { ImagesCanvas } from "../ImagesCanvas/ImagesCanvas";
+import { useSourceFilesStore } from "@/app/providers/source-files-store-provider";
 
 export const TransparencyComparer = () => {
-  const [srcFile, setSrcFile] = useState<string | undefined | null>();
-  const [srcFileObj, setSrcFileObj] = useState<UploadFile | undefined>();
-  const [maketFile, setMaketFile] = useState<string | null | undefined>();
-  const [maketFileObj, setMaketFileObj] = useState<UploadFile | undefined>();
-  const [srcImageOpacity, setSrcImageOpacity] = useState(0.5);
 
-  const { isMoving, containerRef, onMouseDown, onWheel, translateX, translateY, scale } = usePanAndZoom();
+  const {
+    srcFile,
+    maketFile,
+  } = useSourceFilesStore(state => state);
 
-  const onReverse = () => {
-    setSrcFile(maketFile);
-    setSrcFileObj(maketFileObj);
-    setMaketFile(srcFile);
-    setMaketFileObj(srcFileObj);
-  };
+  const {
+    setSrcImageOpacity
+  } = usePanAndZoom();
 
   return (
     <Flex vertical gap={10}>        
-        <Flex gap={10} style={{width: "100%", height: "55px", alignItems: "center"}}>          
-              <Flex gap={10} style={{minWidth: "fit-content", alignItems: "center"}}>
-                <Checkbox disabled={srcFile === undefined} defaultChecked={true} onChange={e => setSrcFile(e.target.checked ? URL.createObjectURL(srcFileObj?.originFileObj as File) : null)}>Отображать исходник</Checkbox>
-                <Checkbox disabled={maketFile === undefined} defaultChecked={true} onChange={e => setMaketFile(e.target.checked ? URL.createObjectURL(maketFileObj?.originFileObj as File) : null)}>Отображать макет</Checkbox>          
-                <Button onClick={onReverse} title="Поменять местами" icon={<i className="fa-solid fa-arrows-up-down-left-right"></i>} />
-              </Flex>    
-              <Flex gap={10} style={{width: "100%", marginLeft: "10px", alignItems: "center"}}>
-                <label>Прозрачность</label>
-                <Slider disabled={!maketFile || !srcFile || isMoving} tooltip={{ formatter: (value) => `${value}%` }} defaultValue={50} onChange={(value) => {
-                  if (isMoving) {
-                    return
-                  }
-                  setSrcImageOpacity(value / 100)
-                  }} style={{width: "100%"}}/>                
-              </Flex>              
-        </Flex>      
+    <Flex gap={10} style={{width: "100%", marginLeft: "10px", alignItems: "center"}}>
+      <label>Прозрачность</label>
+      <Slider disabled={!maketFile || !srcFile} tooltip={{ formatter: (value) => `${value}%` }} defaultValue={50} onChange={(value) => {
+        setSrcImageOpacity(value / 100)
+        }} style={{width: "100%"}}/>                
+    </Flex>              
       {srcFile || maketFile ? (
-        <div className="compare-images" ref={containerRef}>
-          {
-            srcFile && (
-                <div className="compare-image-wrapper" style={{ transform: `translate(0px, 0px) scale(${scale})`}}>
-                  <Image className="compare-image" src={srcFile} width="100%" height="100%" alt="" preview={false} />
-                </div>
-            )
-          }
-          { maketFile && (
-            <div className="compare-image-wrapper" onMouseDown={onMouseDown} onWheel={onWheel} style={{ top: `${srcFile ? "-500px" : "0px"}`, position: "relative", opacity: srcImageOpacity, transform: `translate(${translateX}px, ${translateY}px) scale(${scale})` }}>
-              <Image className="compare-image" src={maketFile} width="100%" height="100%" alt="" preview={false} />
-            </div>
-          )}
-        </div>
+        <ImagesCanvas
+          srcFileVisible={true}
+          maketFileVisible={true}
+        />
       ): (
         <Flex className="no-images">
           <h3>Выберите макет</h3>
