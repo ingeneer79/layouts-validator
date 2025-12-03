@@ -1,77 +1,82 @@
+"use client";
+import { Flex, Tabs } from "antd";
+import type { TabsProps } from "antd";
+import { TransparencyComparer } from "./components/TransparencyComparer/TransparencyComparer";
+import { ImagesPreparer } from "./components/ImagesPreparer/ImagesPreparer";
+import { useSourceFilesStore } from "./providers/source-files-store-provider";
 
-    
-    import { Flex, Tabs } from 'antd';
-    import type { TabsProps } from 'antd';
-    import { TransparencyComparer } from './components/TransparencyComparer/TransparencyComparer';
-import { ImagesPreparer } from './components/ImagesPreparer/ImagesPreparer';
+export default function HomePage() {
+  const { srcFile, layoutFile } = useSourceFilesStore(state => state);
 
-    export default function HomePage() {
+  const items: TabsProps["items"] = [
+    {
+      key: "0",
+      label: "Подготовка изображений",
+      children: <ImagesPreparer />,
+    },
+    {
+      key: "1",
+      label: "Сверка наложением",
+      disabled: !srcFile || !layoutFile,
+      children: <TransparencyComparer />,
+    },
+    {
+      key: "2",
+      label: "Попиксельная cверка",
+      disabled: !srcFile || !layoutFile,
+      children: "Under construction",
+    },
+    {
+      key: "3",
+      label: "Текстовая cверка",
+      disabled: !srcFile || !layoutFile,
+      children: "Under construction",
+    },
+    {
+      key: "4",
+      label: "Cверка штрихкодов",
+      disabled: !srcFile || !layoutFile,
+      children: "Under construction",
+    },
+  ];
 
-    const items: TabsProps['items'] = [
-      {
-        key: '0',
-        label: 'Подготовка изображений',
-        children: <ImagesPreparer/>,
-      },
-      {
-        key: '1',
-        label: 'Сверка наложением',
-        children: <TransparencyComparer/>,
-      },
-      {
-        key: '2',
-        label: 'Попиксельная cверка',
-        children: 'Under construction',
-      },
-      {
-        key: '3',
-        label: 'Текстовая cверка',
-        children: 'Under construction',
-      },
-      {
-        key: '4',
-        label: 'Cверка штрихкодов',
-        children: 'Under construction',
-      },
-    ];
+  // const [result, setResult] = useState<{
+  //   diffClusters?: { x: number; y: number; width: number; height: number }[];
+  //   equal?: boolean;
+  //   error?: string;
+  // } | null>(null);
+  // const [loading, setLoading] = useState(false);
 
-      // const [result, setResult] = useState<{
-      //   diffClusters?: { x: number; y: number; width: number; height: number }[];
-      //   equal?: boolean;
-      //   error?: string;
-      // } | null>(null);
-      // const [loading, setLoading] = useState(false);
+  // const handleCompare = async () => {
+  //   setLoading(true);
+  //   try {
+  //     // Assuming you have images in your public directory
+  //     const response = await fetch('/api/compare-images', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({
+  //         image1Path: './2-src-1.png',
+  //         image2Path: './2-dest-1.png',
+  //       }),
+  //     });
+  //     const data = await response.json();
+  //     debugger
+  //     setResult(data);
+  //   } catch (error) {
+  //     console.error('Error:', error);
+  //     setResult({ error: 'Failed to compare images.' });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-      // const handleCompare = async () => {
-      //   setLoading(true);
-      //   try {
-      //     // Assuming you have images in your public directory
-      //     const response = await fetch('/api/compare-images', {
-      //       method: 'POST',
-      //       headers: { 'Content-Type': 'application/json' },
-      //       body: JSON.stringify({
-      //         image1Path: './2-src-1.png',
-      //         image2Path: './2-dest-1.png',
-      //       }),
-      //     });
-      //     const data = await response.json();
-      //     debugger
-      //     setResult(data);
-      //   } catch (error) {
-      //     console.error('Error:', error);
-      //     setResult({ error: 'Failed to compare images.' });
-      //   } finally {
-      //     setLoading(false);
-      //   }
-      // };
+  return (
+    <Flex gap={20} vertical className="main">
+      <h1>Сверка макетов</h1>
+      <Flex className="main-tabs" flex={1}>
+        <Tabs defaultActiveKey="0" items={items} />
 
-      return (
-        <Flex gap={20} vertical className='main'>
-          <h1>Сверка макетов</h1>
-          <Flex className='main-tabs' flex={1}>
-          <Tabs defaultActiveKey="0" items={items} />
-
-          {/* <button onClick={handleCompare} disabled={loading}>
+        {/* <button onClick={handleCompare} disabled={loading}>
             {loading ? 'Comparing...' : 'Compare Images'}
           </button>
           {result && (
@@ -93,7 +98,7 @@ import { ImagesPreparer } from './components/ImagesPreparer/ImagesPreparer';
                 </div>
               )}
             </div> */}
-            </Flex>
-        </Flex>
-      );
-    }
+      </Flex>
+    </Flex>
+  );
+}

@@ -1,11 +1,11 @@
 "use client";
 
-import { Button, Checkbox, Flex, Image, Slider } from "antd";
+import { Button, Checkbox, Flex, Slider } from "antd";
 import Upload from "antd/es/upload/Upload";
 import "./ImagesPreparer.css";
 import { usePanAndZoom } from "./hooks/usePanAndZoom";
 import { useSourceFilesStore } from "@/app/providers/source-files-store-provider";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { InteractionOutlined, RotateLeftOutlined } from "@ant-design/icons";
 import { RotateRightOutlined } from "@ant-design/icons";
 import Input from "antd/es/input/Input";
@@ -16,26 +16,24 @@ export const ImagesPreparer = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [pdfjsLib, setPdfjsLib] = useState<any>(null);
   const [srcFileVisible, setSrcFileVisible] = useState(true);
-  const [maketFileVisible, setMaketFileVisible] = useState(true);
+  const [layoutFileVisible, setLayoutFileVisible] = useState(true);
 
   const {
     srcFile,
     srcFileObj,
-    maketFile,
-    maketFileObj,
-    maketImageOpacity,
-    maketImageRotateAngle,
-    maketImageZoom,
+    layoutFile,
+    layoutFileObj,
+    layoutImageRotateAngle,
+    layoutImageZoom,
     setSrcFile,
     setSrcFileObj,
-    setMaketFile,
-    setMaketFileObj,
-    setPos,
-    setMaketImageOpacity,
-    setMaketImageRotateAngle,
-    setMaketImageZoom,
-    setMaketImageTranslateX,
-    setMaketImageTranslateY,
+    setLayoutFile,
+    setLayoutFileObj,
+    setLayoutImageOpacity,
+    setLayoutImageRotateAngle,
+    setLayoutImageZoom,
+    setLayoutImageTranslateX,
+    setLayoutImageTranslateY,
   } = useSourceFilesStore(state => state);
 
   const {
@@ -49,30 +47,34 @@ export const ImagesPreparer = () => {
   } = usePanAndZoom();
 
   useEffect(() => {
-    setMaketImageTranslateX(translateX);
-    setMaketImageTranslateY(translateY);
-  }, [translateX, translateY, setMaketImageTranslateX, setMaketImageTranslateY]);
-
+    setLayoutImageTranslateX(translateX);
+    setLayoutImageTranslateY(translateY);
+  }, [
+    translateX,
+    translateY,
+    setLayoutImageTranslateX,
+    setLayoutImageTranslateY,
+  ]);
 
   const onReverse = () => {
-    setSrcFile(maketFile);
-    setSrcFileObj(maketFileObj);
-    setMaketFile(srcFile);
-    setMaketFileObj(srcFileObj);
+    setSrcFile(layoutFile);
+    setSrcFileObj(layoutFileObj);
+    setLayoutFile(srcFile);
+    setLayoutFileObj(srcFileObj);
   };
 
-  const onRotateMaketImage = (angle: number) => {
+  const onRotateLayoutImage = (angle: number) => {
     if (srcFileObj) {
-      let newAngle = maketImageRotateAngle + angle;
+      let newAngle = layoutImageRotateAngle + angle;
       if (newAngle % 360 === 0) {
         newAngle = 0;
-      } 
-      setMaketImageRotateAngle(newAngle);
+      }
+      setLayoutImageRotateAngle(newAngle);
     }
   };
 
   const readPDF = (uploadedFile: Blob): Promise<string> => {
-    const result = new Promise<string>((resolve) => {
+    const result = new Promise<string>(resolve => {
       const reader = new FileReader();
       reader.onload = async function (event) {
         if (!event.target || !pdfjsLib) {
@@ -135,11 +137,9 @@ export const ImagesPreparer = () => {
                 if (info.file.name.endsWith(".pdf")) {
                   readPDF(info.file.originFileObj as Blob).then(
                     imageDataUrl => {
-                      debugger
                       setSrcFile(imageDataUrl);
                       // setSrcFileObj(imageDataUrl);
-                      setPos({ x: 0, y: 0, scale: 1 });
-                      setMaketImageRotateAngle(0);
+                      setLayoutImageRotateAngle(0);
                     }
                   );
                 } else {
@@ -148,8 +148,7 @@ export const ImagesPreparer = () => {
                   );
                   setSrcFileObj(info.file);
                 }
-                setPos({ x: 0, y: 0, scale: 1 });
-                setMaketImageRotateAngle(0);
+                setLayoutImageRotateAngle(0);
               }
             }}
           >
@@ -168,31 +167,31 @@ export const ImagesPreparer = () => {
               style={{ width: "200px" }}
               disabled={srcFile === undefined}
               defaultChecked={true}
-              onChange={e => 
-                setSrcFileVisible(e.target.checked)
-              }
+              onChange={e => setSrcFileVisible(e.target.checked)}
             >
               Отображать исходник
             </Checkbox>
           </Flex>
         </Flex>
-        <Flex gap={10} style={{ width: "100%", marginLeft: "10px", alignItems: "top" }}>
+        <Flex
+          gap={10}
+          style={{ width: "100%", marginLeft: "10px", alignItems: "top" }}
+        >
           <Upload
             accept="image/*"
             maxCount={1}
             multiple={false}
             onChange={info => {
               if (info.file.status === "removed") {
-                setMaketFile(undefined);
-                setMaketFileObj(undefined);
+                setLayoutFile(undefined);
+                setLayoutFileObj(undefined);
                 return;
               }
               if (info.file.status === "done") {
-                setMaketFile(
+                setLayoutFile(
                   URL.createObjectURL(info.file.originFileObj as File)
                 );
-                setMaketFileObj(info.file);
-                setPos({ x: 0, y: 0, scale: 1 });
+                setLayoutFileObj(info.file);
               }
             }}
           >
@@ -209,11 +208,9 @@ export const ImagesPreparer = () => {
           >
             <Checkbox
               style={{ width: "200px" }}
-              disabled={maketFile === undefined}
+              disabled={layoutFile === undefined}
               defaultChecked={true}
-              onChange={e =>
-                setMaketFileVisible(e.target.checked)
-              }
+              onChange={e => setLayoutFileVisible(e.target.checked)}
             >
               Отображать макет
             </Checkbox>
@@ -226,24 +223,29 @@ export const ImagesPreparer = () => {
           style={{ minWidth: "fit-content", alignItems: "center" }}
         >
           <Button
-            disabled={!maketFile || isMoving}
-            onClick={() => onRotateMaketImage(-90)}
+            disabled={!layoutFile || isMoving}
+            onClick={() => onRotateLayoutImage(-90)}
             title="Повернуть против часовой стрелки на 90 градусов"
             icon={<RotateLeftOutlined />}
           />
           <Button
-            disabled={!maketFile || isMoving}
-            onClick={() => onRotateMaketImage(90)}
+            disabled={!layoutFile || isMoving}
+            onClick={() => onRotateLayoutImage(90)}
             title="Повернуть по часовой стрелки"
             icon={<RotateRightOutlined />}
           />
-          <Flex gap={10} style={{alignItems: "center"}}>
-            <label className={!maketFile ? "disabled" : ""}>Масштаб</label>
-            <Input type="number" disabled={!maketFile} style={{ width: "70px" }} value={maketImageZoom} onChange={e => setMaketImageZoom(Number(e.target.value))}>
-          </Input>   
+          <Flex gap={10} style={{ alignItems: "center" }}>
+            <label className={!layoutFile ? "disabled" : ""}>Масштаб</label>
+            <Input
+              type="number"
+              disabled={!layoutFile}
+              style={{ width: "70px" }}
+              value={layoutImageZoom}
+              onChange={e => setLayoutImageZoom(Number(e.target.value))}
+            ></Input>
           </Flex>
           <Button
-            disabled={!srcFile || !maketFile || isMoving}
+            disabled={!srcFile || !layoutFile || isMoving}
             onClick={onReverse}
             title="Поменять местами"
             icon={<InteractionOutlined />}
@@ -253,25 +255,25 @@ export const ImagesPreparer = () => {
           gap={10}
           style={{ width: "100%", marginLeft: "10px", alignItems: "center" }}
         >
-          <label className={!maketFile ? "disabled" : ""}>Прозрачность</label>
+          <label className={!layoutFile ? "disabled" : ""}>Прозрачность</label>
           <Slider
-            disabled={!maketFile || !srcFile || isMoving}
+            disabled={!layoutFile || !srcFile || isMoving}
             tooltip={{ formatter: value => `${value}%` }}
             defaultValue={50}
             onChange={value => {
               if (isMoving) {
                 return;
               }
-              setMaketImageOpacity(value / 100);
+              setLayoutImageOpacity(value / 100);
             }}
             style={{ width: "100%" }}
           />
         </Flex>
       </Flex>
-      {srcFile || maketFile ? (
+      {srcFile || layoutFile ? (
         <ImagesCanvas
           srcFileVisible={srcFileVisible}
-          maketFileVisible={maketFileVisible}
+          layoutFileVisible={layoutFileVisible}
           containerRef={containerRef}
           onMouseDown={onMouseDown}
           onWheel={onWheel}

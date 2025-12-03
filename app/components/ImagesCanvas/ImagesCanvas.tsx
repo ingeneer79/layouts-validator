@@ -3,9 +3,9 @@ import { usePanAndZoom } from "../ImagesPreparer/hooks/usePanAndZoom";
 import { Image } from "antd";
 import { MouseEventHandler, useEffect, WheelEventHandler } from "react";
 
-type MaketFileVisibleProps = {
+type LayoutFileVisibleProps = {
   srcFileVisible: boolean;
-  maketFileVisible: boolean;
+  layoutFileVisible: boolean;
   containerRef: React.RefObject<HTMLDivElement>;
   onMouseDown?: MouseEventHandler;
   onWheel?: WheelEventHandler;
@@ -14,20 +14,20 @@ type MaketFileVisibleProps = {
 
 export const ImagesCanvas = ({
   srcFileVisible,
-  maketFileVisible,
+  layoutFileVisible,
   containerRef,
   onMouseDown,
   onWheel,
   scale,
-}: MaketFileVisibleProps) => {
+}: LayoutFileVisibleProps) => {
   const {
     srcFile,
-    maketFile,
-    maketImageOpacity,
-    maketImageRotateAngle,
-    maketImageTranslateX,
-    maketImageTranslateY,
-    maketImageZoom,
+    layoutFile,
+    layoutImageOpacity,
+    layoutImageRotateAngle,
+    layoutImageTranslateX,
+    layoutImageTranslateY,
+    layoutImageZoom,
   } = useSourceFilesStore(state => state);
 
   return (
@@ -50,24 +50,23 @@ export const ImagesCanvas = ({
           />
         </div>
       )}
-      {maketFile && (
+      {layoutFile && (
         <div
           className="compare-image-wrapper"
           onMouseDown={onMouseDown}
           onWheel={onWheel}
           style={{
-            top: `${srcFileVisible ? "-500px" : "0px"}`,
             position: "relative",
-            opacity: maketImageOpacity,
-            transform: `translate(${maketImageTranslateX}px, ${maketImageTranslateY}px) scale(${
-              scale + maketImageZoom / 100
-            }) rotate(${maketImageRotateAngle}deg)`,
-            display: maketFileVisible ? "block" : "none",
+            opacity: layoutImageOpacity,
+            transform: `translate(${layoutImageTranslateX}px, ${layoutImageTranslateY}px) scale(${
+              scale + layoutImageZoom / 100
+            }) rotate(${layoutImageRotateAngle}deg)`,
+            display: layoutFileVisible ? "block" : "none",
           }}
         >
           <Image
             className="compare-image"
-            src={maketFile}
+            src={layoutFile}
             width="100%"
             height="100%"
             alt=""

@@ -5,27 +5,26 @@ import { createStore } from 'zustand/vanilla'
 export type SourceFilesState = {
   srcFile: string | undefined | null;
   srcFileObj: UploadFile | undefined;
-  maketFile: string | null | undefined;
-  maketFileObj: UploadFile | undefined;
-  maketImageOpacity: number;
-  maketImageRotateAngle: number;
-  maketImageTranslateX: number;
-  maketImageTranslateY: number;
-  maketImageZoom: number;
+  layoutFile: string | null | undefined;
+  layoutFileObj: UploadFile | undefined;
+  layoutImageOpacity: number;
+  layoutImageRotateAngle: number;
+  layoutImageTranslateX: number;
+  layoutImageTranslateY: number;
+  layoutImageZoom: number;
   pos: { x: number; y: number; scale: number };
 }
 
 export type SourceFilesActions = {
   setSrcFile: (file: string | undefined | null) => void;
   setSrcFileObj: (file: UploadFile | undefined) => void;
-  setMaketFile: (file: string | null | undefined) => void;
-  setMaketFileObj: (file: UploadFile | undefined) => void;
-  setMaketImageOpacity: (opacity: number) => void;
-  setMaketImageZoom: (opacity: number) => void;
-  setMaketImageTranslateX: (value: number) => void;
-  setMaketImageTranslateY: (value: number) => void;
-  setMaketImageRotateAngle: (angle: number) => void;
-  setPos: (pos: { x: number; y: number; scale: number }) => void;
+  setLayoutFile: (file: string | null | undefined) => void;
+  setLayoutFileObj: (file: UploadFile | undefined) => void;
+  setLayoutImageOpacity: (opacity: number) => void;
+  setLayoutImageZoom: (opacity: number) => void;
+  setLayoutImageTranslateX: (value: number) => void;
+  setLayoutImageTranslateY: (value: number) => void;
+  setLayoutImageRotateAngle: (angle: number) => void;
 }
 
 export type SourceFilesStore = SourceFilesState & SourceFilesActions
@@ -34,13 +33,13 @@ export type SourceFilesStore = SourceFilesState & SourceFilesActions
 export const defaultInitState: SourceFilesState = {
   srcFile: undefined,
   srcFileObj: undefined,
-  maketFile: undefined,
-  maketFileObj: undefined,
-  maketImageOpacity: 0.5,
-  maketImageRotateAngle: 0,
-  maketImageZoom: 100,
-  maketImageTranslateX: 0,
-  maketImageTranslateY: 0,
+  layoutFile: undefined,
+  layoutFileObj: undefined,
+  layoutImageOpacity: 0.5,
+  layoutImageRotateAngle: 0,
+  layoutImageZoom: 100,
+  layoutImageTranslateX: 0,
+  layoutImageTranslateY: 0,
   pos: { x: 0, y: 0, scale: 1 },
 }
 
@@ -55,13 +54,12 @@ export const createSourceFilesStore = (
     ...initState,
     setSrcFile: (file) => set({ srcFile: file }), 
     setSrcFileObj: (file) => set({ srcFileObj: file }),
-    setMaketFile: (file) => set({ maketFile: file }),
-    setMaketFileObj: (file) => set({ maketFileObj: file }),
-    setMaketImageOpacity: (opacity) => set({ maketImageOpacity: opacity }),
-    setMaketImageRotateAngle: (angle) => set({ maketImageRotateAngle: angle }),
-    setMaketImageZoom: (zoom) => set({ maketImageZoom: zoom }),
-    setMaketImageTranslateX: (value) => set({ maketImageTranslateX: value }),
-    setMaketImageTranslateY: (value) => set({ maketImageTranslateY: value }),
-    setPos: (pos) => set({ pos }),
+    setLayoutFile: (file) => set({ layoutFile: file }),
+    setLayoutFileObj: (file) => set({ layoutFileObj: file }),
+    setLayoutImageOpacity: (opacity) => set({ layoutImageOpacity: opacity }),
+    setLayoutImageRotateAngle: (angle) => set({ layoutImageRotateAngle: angle }),
+    setLayoutImageZoom: (zoom) => set({ layoutImageZoom: zoom }),
+    setLayoutImageTranslateX: (value) => set({ layoutImageTranslateX: value }),
+    setLayoutImageTranslateY: (value) => set({ layoutImageTranslateY: value }),
   }))
 }
