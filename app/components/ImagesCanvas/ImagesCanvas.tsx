@@ -1,7 +1,6 @@
 import { useSourceFilesStore } from "@/app/providers/source-files-store-provider";
-import { usePanAndZoom } from "../ImagesPreparer/hooks/usePanAndZoom";
 import { Image } from "antd";
-import { MouseEventHandler, useEffect, WheelEventHandler } from "react";
+import { MouseEventHandler, WheelEventHandler } from "react";
 
 type LayoutFileVisibleProps = {
   srcFileVisible: boolean;
@@ -37,7 +36,7 @@ export const ImagesCanvas = ({
           className="compare-image-wrapper src-file-image"
           style={{
             transform: `translate(0px, 0px) scale(${scale})`,
-            display: srcFileVisible ? "block" : "none",
+            display: srcFileVisible ? "flex" : "none",
           }}
         >
           <Image

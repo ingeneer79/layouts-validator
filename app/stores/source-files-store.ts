@@ -25,6 +25,7 @@ export type SourceFilesActions = {
   setLayoutImageTranslateX: (value: number) => void;
   setLayoutImageTranslateY: (value: number) => void;
   setLayoutImageRotateAngle: (angle: number) => void;
+  resetLayoutImage(): void
 }
 
 export type SourceFilesStore = SourceFilesState & SourceFilesActions
@@ -61,5 +62,9 @@ export const createSourceFilesStore = (
     setLayoutImageZoom: (zoom) => set({ layoutImageZoom: zoom }),
     setLayoutImageTranslateX: (value) => set({ layoutImageTranslateX: value }),
     setLayoutImageTranslateY: (value) => set({ layoutImageTranslateY: value }),
+    resetLayoutImage: () => set({
+      layoutImageRotateAngle: 0,
+      layoutImageZoom: 100,
+    }),
   }))
 }

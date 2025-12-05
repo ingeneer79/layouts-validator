@@ -5,7 +5,7 @@ export const initialState = {
   translateY: 0,
   prevMouseX: 0,
   prevMouseY: 0,
-  scale: 1
+  scale: 0
 };
 
 const getScaledTranslate = (state: any, zoomFactor: number) => ({

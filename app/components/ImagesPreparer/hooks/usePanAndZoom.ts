@@ -28,7 +28,6 @@ export const usePanAndZoom = () => {
   };
   const onWheel = (event: WheelEvent) => {
     if (event.deltaY !== 0 && containerRef.current) {
-      debugger
       const containerRect = containerRef.current.getBoundingClientRect();
       dispatch(zoom(event, containerRect));
     }

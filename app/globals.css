@@ -1,8 +1,12 @@
-@import "tailwindcss";
+/*@import "tailwindcss";*/
+
+body {
+   overflow: hidden; 
+}
 
 .main {
     gap: 1rem;
-    min-height: 100vh;
+    /* min-height: 100vh; */
     flex-direction: column;
     justify-content: center;
     padding: 20px !important;

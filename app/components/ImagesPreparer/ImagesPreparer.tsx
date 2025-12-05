@@ -6,7 +6,7 @@ import "./ImagesPreparer.css";
 import { usePanAndZoom } from "./hooks/usePanAndZoom";
 import { useSourceFilesStore } from "@/app/providers/source-files-store-provider";
 import { useEffect, useState } from "react";
-import { InteractionOutlined, RotateLeftOutlined } from "@ant-design/icons";
+import { FileExcelOutlined, InteractionOutlined, RotateLeftOutlined, ScissorOutlined } from "@ant-design/icons";
 import { RotateRightOutlined } from "@ant-design/icons";
 import Input from "antd/es/input/Input";
 import { ImagesCanvas } from "../ImagesCanvas/ImagesCanvas";
@@ -17,6 +17,7 @@ export const ImagesPreparer = () => {
   const [pdfjsLib, setPdfjsLib] = useState<any>(null);
   const [srcFileVisible, setSrcFileVisible] = useState(true);
   const [layoutFileVisible, setLayoutFileVisible] = useState(true);
+  const [cutMode, setCutMode] = useState(false);
 
   const {
     srcFile,
@@ -34,6 +35,7 @@ export const ImagesPreparer = () => {
     setLayoutImageZoom,
     setLayoutImageTranslateX,
     setLayoutImageTranslateY,
+    resetLayoutImage,
   } = useSourceFilesStore(state => state);
 
   const {
@@ -64,7 +66,7 @@ export const ImagesPreparer = () => {
   };
 
   const onRotateLayoutImage = (angle: number) => {
-    if (srcFileObj) {
+    if (layoutFile) {
       let newAngle = layoutImageRotateAngle + angle;
       if (newAngle % 360 === 0) {
         newAngle = 0;
@@ -234,6 +236,23 @@ export const ImagesPreparer = () => {
             title="Повернуть по часовой стрелки"
             icon={<RotateRightOutlined />}
           />
+          <Button
+            disabled={!layoutFile || isMoving}
+            onClick={() => resetLayoutImage()}
+            title="Сбросить"
+            icon={<FileExcelOutlined />}
+          />
+
+          <Button
+            disabled={!layoutFile || isMoving}
+            onClick={() => {
+              setCutMode(!cutMode)
+            }}
+            title="Вырезать"
+            style={{backgroundColor: cutMode ? "gray" : ""}}
+            icon={<ScissorOutlined />}
+          />
+
           <Flex gap={10} style={{ alignItems: "center" }}>
             <label className={!layoutFile ? "disabled" : ""}>Масштаб</label>
             <Input
@@ -271,14 +290,16 @@ export const ImagesPreparer = () => {
         </Flex>
       </Flex>
       {srcFile || layoutFile ? (
+        <div style={{ cursor: cutMode ? "crosshair" : "default" }}>
         <ImagesCanvas
           srcFileVisible={srcFileVisible}
           layoutFileVisible={layoutFileVisible}
           containerRef={containerRef}
-          onMouseDown={onMouseDown}
+          onMouseDown={!cutMode ? onMouseDown : undefined}
           onWheel={onWheel}
           scale={scale}
         />
+        </div>
       ) : (
         <Flex className="no-images">
           <h3>Выберите макет</h3>
