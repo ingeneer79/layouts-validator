@@ -9,3 +9,9 @@
     background: #f5f5f5;
 }
 
+.transparent-compare-images {
+    width: 100%;
+    height: calc(100vh - 150px) !important;
+    overflow: auto;    
+}
+

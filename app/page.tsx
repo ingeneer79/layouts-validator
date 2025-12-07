@@ -72,7 +72,6 @@ export default function HomePage() {
 
   return (
     <Flex gap={20} vertical className="main">
-      <h1>Сверка макетов</h1>
       <Flex className="main-tabs" flex={1}>
         <Tabs defaultActiveKey="0" items={items} />
 

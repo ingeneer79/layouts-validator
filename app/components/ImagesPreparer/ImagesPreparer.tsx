@@ -290,7 +290,7 @@ export const ImagesPreparer = () => {
         </Flex>
       </Flex>
       {srcFile || layoutFile ? (
-        <div style={{ cursor: cutMode ? "crosshair" : "default" }}>
+        <div style={{ cursor: cutMode ? "crosshair" : "default"}}>
         <ImagesCanvas
           srcFileVisible={srcFileVisible}
           layoutFileVisible={layoutFileVisible}

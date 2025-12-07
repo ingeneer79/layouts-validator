@@ -3,20 +3,24 @@ import { Image } from "antd";
 import { MouseEventHandler, WheelEventHandler } from "react";
 
 type LayoutFileVisibleProps = {
+  className?: string;
   srcFileVisible: boolean;
   layoutFileVisible: boolean;
   containerRef: React.RefObject<HTMLDivElement>;
   onMouseDown?: MouseEventHandler;
   onWheel?: WheelEventHandler;
+  opacity?: number;
   scale: number;
 };
 
 export const ImagesCanvas = ({
+  className,
   srcFileVisible,
   layoutFileVisible,
   containerRef,
   onMouseDown,
   onWheel,
+  opacity,
   scale,
 }: LayoutFileVisibleProps) => {
   const {
@@ -30,7 +34,7 @@ export const ImagesCanvas = ({
   } = useSourceFilesStore(state => state);
 
   return (
-    <div className="compare-images comparer-background" ref={containerRef}>
+    <div className={`compare-images comparer-background ${className ? className : ""}`} ref={containerRef}>
       {srcFile && (
         <div
           className="compare-image-wrapper src-file-image"
@@ -56,7 +60,7 @@ export const ImagesCanvas = ({
           onWheel={onWheel}
           style={{
             position: "relative",
-            opacity: layoutImageOpacity,
+            opacity: opacity ?? layoutImageOpacity,
             transform: `translate(${layoutImageTranslateX}px, ${layoutImageTranslateY}px) scale(${
               scale + layoutImageZoom / 100
             }) rotate(${layoutImageRotateAngle}deg)`,

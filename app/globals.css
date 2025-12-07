@@ -21,7 +21,7 @@ body {
     }
 
     .main-tabs {
-        height: calc(100vh - 4rem);
+        height: calc(100vh - 1rem);
     }
 
     .main-tabs .ant-tabs {
