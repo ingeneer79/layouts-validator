@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "angular:docker:build": "docker compose -f docker/angular-builder/compose.yml build",
+    "angular:build": "docker compose -f docker/angular-builder/compose.yml run --rm angular-builder"
   },
   "dependencies": {
     "@ant-design/nextjs-registry": "^1.2.0",

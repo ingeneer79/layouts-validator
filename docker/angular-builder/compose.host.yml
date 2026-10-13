@@ -1,0 +1,7 @@
+# Подключается вместе с compose.yml, если npm-registry недоступен из Docker bridge:
+#   docker compose -f docker/angular-builder/compose.yml -f docker/angular-builder/compose.host.yml run --rm angular-builder
+# или:
+#   DOCKER_NETWORK=host ./scripts/build-angular.sh /путь/к/проекту
+services:
+  angular-builder:
+    network_mode: host

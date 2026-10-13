@@ -1,0 +1,31 @@
+# Сборка Angular-проекта из внешней папки.
+# ANGULAR_PROJECT_PATH должен указывать на корень проекта (там лежит angular.json).
+#
+#   export ANGULAR_PROJECT_PATH=/abs/path/to/angular-app
+#   docker compose -f docker/angular-builder/compose.yml run --rm angular-builder
+#
+# Удобная обёртка:
+#   ./scripts/build-angular.sh /abs/path/to/angular-app
+services:
+  angular-builder:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: layouts-validator-angular-builder:local
+    init: true
+    working_dir: /work
+    volumes:
+      - ${ANGULAR_PROJECT_PATH:-/nonexistent-angular-project}:/project
+      - angular-builder-npm-cache:/root/.npm
+    environment:
+      PROJECT_DIR: /project
+      WORK_DIR: /work
+      NG_CONFIGURATION: ${NG_CONFIGURATION:-production}
+      BUILD_COMMAND: ${BUILD_COMMAND:-}
+      SKIP_INSTALL: ${SKIP_INSTALL:-0}
+      HOST_OUTPUT_DIR: ${HOST_OUTPUT_DIR:-dist}
+      HOST_UID: ${HOST_UID:-1000}
+      HOST_GID: ${HOST_GID:-1000}
+
+volumes:
+  angular-builder-npm-cache:
